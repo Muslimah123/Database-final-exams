@@ -9,7 +9,7 @@ create table person(
 	 personid varchar(25),
 	 firstname varchar(50) not null, 
 	 lastname varchar(50) not null,
-	 Age int not null,
+	 Age int not nulll,
 	 gender enum('male','female'),
 	 phonenum int not null, 
 	 address varchar(50) not null, 
@@ -336,3 +336,29 @@ values('Cust00010',10,'2022-09-26',0547235780,'Emp0007','thanks so much and sorr
 -- Six functionalities of the database--
 
 -- Query 0ne--
+--  Write a query in SQL to list the department where at least two employees are working --
+ SELECT deptid,
+       count(*)
+FROM employees
+GROUP BY deptid
+HAVING count(*) >= 2;
+
+  -- Shows the total and average amount of money from bills in a financial year-- 
+SELECT 
+CASE WHEN MONTH(paiddate)>=4 
+THEN CONCAT(YEAR(paiddate), '-',YEAR(paiddate)+1)
+ELSE concat(YEAR(paiddate)-1,'-',YEAR(paiddate)) 
+END AS financial_year ,
+COUNT(*) as Nos,SUM(amt) as total,AVG(amt) as average 
+FROM bills GROUP BY financial_year;
+
+-- a query in SQL to find the highest paid employees in the department Finance and Accounting. --
+SELECT *
+FROM employees
+WHERE salary IN
+    (SELECT max(salary)
+     FROM employees
+     WHERE deptid IN
+         (SELECT d.deptid
+          FROM department d
+          WHERE d.deptname = 'Finance and Accounting'));
